@@ -12,3 +12,6 @@ The YAHIMOD's a (somewhat unbalanced) mess of custom jokers, tarots and blinds, 
 4) Launch the game and click the Mods button, it should've loaded properly if you followed the steps correctly!
 
  ![Ingame look at it](https://i.imgur.com/cJKqefE.png)
+
+ # DISCLAIMER
+   I didn't build this mod with cross-mod compatibility in mind. Please don't report issues pertaining to crashes related to other mods, thank you.
