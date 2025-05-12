@@ -1,0 +1,9 @@
+{
+    "name": "Yahimod",
+    "version_number": "1.0.0",
+    "website_url": "",
+    "description": "yahiamice tries modding balatro (wow!)",
+    "dependencies": [
+        ""
+    ]
+}
