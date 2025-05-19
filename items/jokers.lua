@@ -3629,7 +3629,7 @@ end,
 -- this will handle my effects
 
 
-function throwCoin(posx,posy)
+
 
 
 
