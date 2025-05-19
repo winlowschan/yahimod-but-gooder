@@ -5,6 +5,7 @@ SMODS.Atlas{
     py = 96,
 }
 
+
 SMODS.Consumable({
     key = "yahimod_opentolan",
     set = "Spectral",
@@ -33,6 +34,7 @@ SMODS.Consumable({
         G.opentolan_canspawn = true
         G.opentolan_phase = Yahimod.ticks
         G.opentolan_phase_ex = 1
+        G.opentolan_phase = 600
         print("Can spawn any item! Go to the Collection, hover on what you want and press Enter")
     end,
 
@@ -125,7 +127,6 @@ SMODS.Consumable({
 	atlas = "atlas_yahimod_consumeables",
     unlocked = true,
     cost = 4,
-    hidden = true,
 
     use = function(self, card, area, copier)
         local _sellval = 0
@@ -230,7 +231,7 @@ SMODS.Consumable({
     hidden = true,
 
     use = function(self, card, area, copier)
-        G.showfish = 400
+        G.showfish = 170
         play_sound("yahimod_fish")
     end,
 
@@ -363,7 +364,7 @@ SMODS.Consumable({
     cost = 4,
 
     use = function(self, card, area, copier)
-        G.showlaughingcat = 1200
+        G.showlaughingcat = 990
         play_sound("win")
     end,
 
@@ -462,6 +463,183 @@ SMODS.Consumable {
             
             G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
                 G.hand.highlighted[1]:set_edition({ yahimod_evil = true })
+                return true end }))
+            
+            delay(0.5)
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+    end
+}
+
+-- amongwojak
+
+SMODS.Consumable {
+    set = "Tarot",
+    key = "yahimod_amongwojak",
+	config = {
+        -- How many cards can be selected.
+        max_highlighted = 3,
+        -- the key of the seal to change to
+        extra = 'ifunny_seal',
+    },
+    loc_vars = function(self, info_queue, card)
+        -- Handle creating a tooltip with seal args.
+        info_queue[#info_queue+1] = G.P_SEALS[(card.ability or self.config).extra]
+        -- Description vars
+        return {vars = {(card.ability or self.config).max_highlighted}}
+    end,
+    loc_txt = {
+        name = 'Among Wojak',
+        text = {
+            "Select up to {C:attention}#1#{} cards to",
+            "apply an {C:dark_edition}Ifunny Watermark{} to"
+        }
+    },
+    cost = 4,
+    atlas = "atlas_yahimod_consumeables",
+    pos = {x=1, y=2},
+    use = function(self, card, area, copier)
+        for i = 1, math.min(#G.hand.highlighted, card.ability.max_highlighted) do
+            G.E_MANAGER:add_event(Event({func = function()
+                play_sound('paper1')
+                card:juice_up(0.3, 0.5)
+                return true end }))
+            
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                G.hand.highlighted[i].seal = "yahimod_ifunny_seal"
+                return true end }))
+            
+            delay(0.5)
+        end
+        G.E_MANAGER:add_event(Event({trigger = 'after', delay = 0.2,func = function() G.hand:unhighlight_all(); return true end }))
+    end
+}
+
+-- is that yaha mouse
+
+SMODS.Consumable({
+    key = "yahimod_yahamouse",
+    set = "Tarot",
+    object_type = "Consumable",
+    name = "yahimod_yahamouse",
+    loc_txt = {
+        name = "is that yaha mouse",
+        text={
+        "{C:green}1 in 100 chance",
+        "to spawn {C:attention}Yahiamice{}",
+        },
+    },
+	
+	
+	pos = {x=2, y= 2},
+	order = 99,
+	atlas = "atlas_yahimod_consumeables",
+    unlocked = true,
+    cost = 4,
+
+    use = function(self, card, area, copier)
+        if math.random(1,100) == 1 then
+            local card = create_card('Joker', G.Jokers, nil, nil, nil, nil, 'j_yahimod_yahicard', 'yahamouse')
+            card:add_to_deck()
+            G.jokers:emplace(card)
+            play_sound("yahimod_jackpot")
+        else
+            return{message = "Nope!"}
+        end
+    end,
+
+    can_use = function(self, card)
+        if #G.jokers.cards < G.jokers.config.card_limit then
+            return true
+        end
+	end,
+
+	check_for_unlock = function(self, args)
+		if args.type == "win_deck" then
+            unlock_card(self)
+        else
+			unlock_card(self)
+		end
+	end,
+})
+
+-- is that yaha mouse
+
+SMODS.Consumable({
+    key = "yahimod_fortune",
+    set = "Tarot",
+    object_type = "Consumable",
+    name = "yahimod_fortune",
+    loc_txt = {
+        name = "Fortune Of Wheel",
+        text={
+        "{C:green}1 in 1000 chance",
+        "to gain {C:attention}$1,000,000{}",
+        },
+    },
+	
+	
+	pos = {x=3, y= 2},
+	order = 99,
+	atlas = "atlas_yahimod_consumeables",
+    unlocked = true,
+    cost = 4,
+
+    use = function(self, card, area, copier)
+        if math.random(1,1000) == 1 then
+            play_sound("yahimod_jackpot")
+            ease_dollars(1000000)
+        else
+            return{message = "Nope!"}
+        end
+    end,
+
+    can_use = function(self, card)
+        return true
+	end,
+
+	check_for_unlock = function(self, args)
+		if args.type == "win_deck" then
+            unlock_card(self)
+        else
+			unlock_card(self)
+		end
+	end,
+})
+
+SMODS.Consumable {
+    set = "Tarot",
+    key = "yahimod_jar",
+	config = {
+        -- How many cards can be selected.
+        max_highlighted = 1,
+        -- the key of the seal to change to
+        extra = 'swapper_seal',
+    },
+    loc_vars = function(self, info_queue, card)
+        -- Handle creating a tooltip with seal args.
+        info_queue[#info_queue+1] = G.P_SEALS[(card.ability or self.config).extra]
+        -- Description vars
+        return {vars = {(card.ability or self.config).max_highlighted}}
+    end,
+    loc_txt = {
+        name = 'mod.jar',
+        text = {
+            "Select {C:attention}#1#{} card to",
+            "apply a {C:red}Swap{C:blue}per Seal{} to"
+        }
+    },
+    cost = 4,
+    atlas = "atlas_yahimod_consumeables",
+    pos = {x=0, y=3},
+    use = function(self, card, area, copier)
+        for i = 1, math.min(#G.hand.highlighted, card.ability.max_highlighted) do
+            G.E_MANAGER:add_event(Event({func = function()
+                card:juice_up(0.3, 0.5)
+                return true end }))
+            
+            G.E_MANAGER:add_event(Event({trigger = 'after',delay = 0.1,func = function()
+                G.hand.highlighted[i].seal = "yahimod_swapper_seal"
                 return true end }))
             
             delay(0.5)
